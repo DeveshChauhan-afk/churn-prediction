@@ -20,6 +20,7 @@ def load_data(path):
     y = df["Churn Value"]   # 0 / 1 already perfect
 
     # Drop target + leakage columns
+    df.drop(["Zip Code", "Latitude", "Longitude"], axis=1, inplace=True)
     df.drop(["Churn Value", "Churn Label", "Churn Score", "CLTV", "Churn Reason"], axis=1, inplace=True)
 
     # One-hot encoding

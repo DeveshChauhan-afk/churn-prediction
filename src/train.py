@@ -25,11 +25,19 @@ lr.fit(X_train, y_train)
 rf = RandomForestClassifier(n_estimators=100)
 rf.fit(X_train, y_train)
 feature_importance = pd.Series(rf.feature_importances_, index=X.columns)
+
+y_probs = rf.predict_proba(X_test)[:,1]
+y_pred_custom = (y_probs > 0.3).astype(int)
+
 print("feature importance\n",feature_importance.sort_values(ascending=False).head(10))
 print("confusion matrix\n",confusion_matrix(y_test, rf.predict(X_test)))
 # Evaluation
 print("LR ROC-AUC:", roc_auc_score(y_test, lr.predict_proba(X_test)[:,1]))
 print("RF ROC-AUC:", roc_auc_score(y_test, rf.predict_proba(X_test)[:,1]))
-print("classification report\n",classification_report(y_test, rf.predict(X_test)))
+print("classification report")
+print(classification_report(y_test, rf.predict(X_test)))
+print("custom y pred classification report")
+print(classification_report(y_test, y_pred_custom))
 # Save best model
 joblib.dump(rf, "D:/New folder/churn/model/model.pkl")
+joblib.dump(X.columns, "D:/New folder/churn/model/columns.pkl")
